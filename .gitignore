@@ -1,0 +1,47 @@
+# Build output
+/bin/
+/dist/
+/mediascraper
+*.exe
+*.test
+
+# Go tooling
+go.work
+go.work.sum
+/vendor/
+*.out
+*.prof
+*.pprof
+coverage.html
+*.coverprofile
+
+# Local configuration and secrets (proxy credentials live here)
+/config.yaml
+/config.yml
+*.local.yaml
+*.local.yml
+proxies*.txt
+.env
+.env.*
+!.env.example
+
+# Scrape output (test fixtures are kept)
+/output/
+*.jsonl
+*.csv
+!**/testdata/**
+
+# Future frontend
+node_modules/
+
+# Claude Code per-user settings
+.claude/settings.local.json
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

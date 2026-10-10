@@ -1,0 +1,72 @@
+# MediaScraper example configuration.
+#
+# Every key is optional; omitted keys use the defaults shown by
+# `mediascraper config defaults`. CLI flags override values set here.
+
+scraper:
+  concurrency: 4        # pages processed in parallel (across all hosts)
+  max_depth: 1          # link hops to follow from seed URLs (0 = seeds only)
+  max_pages: 200        # hard cap on pages fetched (0 = unlimited)
+  same_host: true       # only follow links on the seed URLs' hosts
+  follow: []            # CSS selectors for links to follow on every site
+
+http:
+  timeout: 30s
+  max_body_bytes: 10485760
+  requests_per_second: 1   # per host; robots.txt Crawl-delay can lower it further
+  burst: 1
+  respect_robots: true
+  robots_agent: MediaScraper
+  # Empty = rotate a built-in pool of desktop browser user agents.
+  user_agents: []
+  headers:
+    Accept-Language: en-US,en;q=0.9
+  retry:
+    max_attempts: 3
+    base_delay: 500ms
+    max_delay: 30s
+    statuses: [408, 425, 429, 500, 502, 503, 504]
+
+proxy:
+  # Supported schemes: http, https, socks5. With none configured, requests
+  # connect directly. Proxies rotate round-robin; one that fails
+  # `max_failures` times in a row (network error, 403, 407, 429) is benched
+  # for `cooldown`.
+  urls: []
+  #  - http://user:pass@proxy1.example.net:8080
+  #  - socks5://proxy2.example.net:1080
+  file: ""              # optional: newline-separated proxy list
+  max_failures: 3
+  cooldown: 1m
+
+output:
+  format: jsonl         # jsonl | json | csv
+  path: ""              # empty or "-" = stdout
+
+log:
+  level: info           # debug | info | warn | error
+  format: text          # text | json
+
+# Site profiles add precise CSS-selector extraction for specific sites.
+# Most stores need none: JSON-LD, microdata and OpenGraph are read
+# automatically. Profile values take priority; structured data fills gaps.
+profiles:
+  - name: example-store
+    domains: [store.example.com]   # also matches subdomains
+    product:
+      # Set `container` on listing pages to extract one product per match.
+      # Field selectors are relative to it and may match the container itself.
+      container: ""
+      fields:
+        name:         { selector: "h1.product-title" }
+        price:        { selector: ".price .amount" }
+        currency:     { value: "USD" }                      # constant
+        sku:          { selector: "[data-sku]", attr: "data-sku" }
+        availability: { selector: ".stock-status" }
+        images:       { selector: ".gallery img", attr: "src" }
+        rating:       { selector: ".rating", attr: "aria-label", regex: '([\d.]+) out of' }
+      extra:
+        color:        { selector: ".swatch.selected", attr: "title" }
+    follow:
+      - "a.product-card"            # product links on category pages
+      - "a[rel=next]"               # pagination

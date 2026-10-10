@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <title>Acme Widget Pro</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type": "WebSite", "name": "Example Shop", "url": "https://shop.example.com/"},
+      {"@type": "BreadcrumbList", "itemListElement": []},
+      {
+        "@type": ["Product", "Thing"],
+        "name": "Acme Widget Pro",
+        "description": "  The best\n  widget. ",
+        "url": "/p/widget",
+        "sku": "AW-PRO-1",
+        "gtin13": "0012345678905",
+        "mpn": "AWP1",
+        "brand": {"@type": "Brand", "name": "Acme"},
+        "image": ["/img/widget-1.jpg", {"@type": "ImageObject", "url": "https://cdn.example.com/widget-2.jpg"}],
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": 4.6, "reviewCount": "128"},
+        "offers": [
+          {"@type": "Offer", "availability": "https://schema.org/InStock", "priceSpecification": {"price": "1299.00", "priceCurrency": "USD"}},
+          {"@type": "Offer", "price": "1399.00", "priceCurrency": "USD"}
+        ],
+        "isRelatedTo": {"@type": "Product", "name": "Widget Case"}
+      }
+    ]
+  }
+  </script>
+</head>
+<body><h1>Acme Widget Pro</h1></body>
+</html>
